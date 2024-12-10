@@ -3,23 +3,34 @@ import calculations_bolts
 import thermal
 from itertools import product
 
+t2s = np.linspace(0.002, 0.01, 20) # at least 2 mm (immediately chosen)
+t3s = np.linspace(0.005, 0.005, 1) # constant 5mm
+
+widths = np.linspace(0.05, 0.05, 1) # constant 5 cm
+lengths = np.linspace(0.05, 0.10, 9) # at least 5cm (immediately chosen)
+
+lug_material = 2 ## 2 or 8
+wall_material = 7
+bolt_material = 1
+
 Material_namessss = [
-	"AL6061-T6", 
-	"AL Alloy 7075-T6", 
-	"AL Alloy 2024-T3", 
-	"Stainless Steel 316", 
-	"Inconel 718", 
-	"Maraging Steel 18Ni(250)"
-	"Aluminium alloy AA 2024-T3" #material of the wall for whatever reason
+	"1 - AL6061-T6", 
+	"2 - AL Alloy 7075-T6", 
+	"3 - AL Alloy 2024-T3", 
+	"4 - Stainless Steel 316", 
+	"5 - Inconel 718", 
+	"6 - Maraging Steel 18Ni(250)",
+	"7 - Aluminium alloy AA 2024-T3",
+	"8 -4130 Steel "  #material of the wall for whatever reason
 ]
 
-Material_names = np.array([1,2,3,4,5,6,7])
+Material_names = np.array([1,2,3,4,5,6,7,8])
 
-normal_yield = np.array([240E6, 503E6, 324E6, 290E6, 1030E6, 1725E6,370])#Pa
+normal_yield = np.array([240E6, 503E6, 324E6, 290E6, 1030E6, 1725E6,370E6,435E6])#Pa
 shear_yield = normal_yield/np.sqrt(3)  # Shear yield strengths in MPa
-E_moduli = np.array([69, 71.7, 73.1, 193, 205, 210,73])*10**9  # Young's Moduli in GPa
-thermal_expansion = np.array([23.6, 23.5, 22.2, 16.0, 13.0, 10.8, 23])*10**-6  # Thermal expansion coefficients in 1/K
-densities = np.array([2700, 2810, 2780, 8000, 8190, 8000,2780])  # Density in kg/m^3
+E_moduli = np.array([69, 71.7, 73.1, 193, 205, 210,73,205])*10**9  # Young's Moduli in GPa
+thermal_expansion = np.array([23.6, 23.5, 22.2, 16.0, 13.0, 10.8, 23,11.2])*10**-6  # Thermal expansion coefficients in 1/K
+densities = np.array([2700, 2810, 2780, 8000, 8190, 8000,2780,7850])  # Density in kg/m^3
 
 material_properties = np.vstack((Material_names, E_moduli, normal_yield, shear_yield,thermal_expansion,densities)).T
 
@@ -78,11 +89,7 @@ diameterscondensed = np.vstack((Diameters, Diameters_minor, d_head)).T
 diameterscondensed = diameterscondensed[::16]
 print("diameterslength",len(diameterscondensed))
 
-t2s = np.linspace(0.0001, 0.01, 20)
-t3s = np.linspace(0.005, 0.005, 1)
 
-widths = np.linspace(0.02, 0.02, 1)
-lengths = np.linspace(0.0128, 0.05, 9)
 
 
 def GetWeight(diameters, density_lug, density_wall, density_bolt, w, l,t2):
@@ -99,9 +106,9 @@ for w in widths:
 			for loadcase in [loadcases[1]]:
 				for t2 in t2s:
 					for t3 in t3s:
-						for material_bolt in [material_properties[0]]:
-							for material_lug in [material_properties[1]]:
-								for material_wall in [material_properties[1]]:
+						for material_bolt in [material_properties[bolt_material-1]]:
+							for material_lug in [material_properties[lug_material-1]]:
+								for material_wall in [material_properties[wall_material-1]]:
 
 									name_material_lug = material_lug[0]
 									E_lug = material_lug[1]
@@ -187,9 +194,9 @@ for w in widths:
 												print("diameter head", d_head)
 												print("position matrix:")
 												print(positions)
-												print("material_lug", Material_namessss[int(name_material_lug)])
-												print("material_wall", Material_namessss[int(name_material_wall)])
-												print("name_material_bolt", Material_namessss[int(name_material_bolt)])
+												print("material_lug", Material_namessss[int(name_material_lug)-1])
+												print("material_wall", Material_namessss[int(name_material_wall)-1])
+												print("name_material_bolt", Material_namessss[int(name_material_bolt)-1])
 												print("----------------------------------------------")						
 
 

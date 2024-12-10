@@ -3,7 +3,7 @@ import calculations_bolts
 import thermal
 from itertools import product
 
-Material_names = [
+Material_namessss = [
 	"AL6061-T6", 
 	"AL Alloy 7075-T6", 
 	"AL Alloy 2024-T3", 
@@ -22,19 +22,19 @@ densities = np.array([2700, 2810, 2780, 8000, 8190, 8000])  # Density in kg/m^3
 
 material_properties = np.vstack((Material_names, E_moduli, normal_yield, shear_yield,thermal_expansion,densities)).T
 
-t2s = np.linspace(0.0001, 0.01, 9)
-t3s = np.linspace(0.0001, 0.01, 9)
+t2s = np.linspace(0.0001, 0.01, 20)
+t3s = np.linspace(0.005, 0.005, 1)
 
 
 Force1 = np.array([442.2, 1400.25 + 280, 442.2])  # Force vector in 3D [Fx, Fy, Fz]
 Moment1 = np.array([15.25, 0, 0])  # Moment vector in 3D [Mx, My, Mz] 280
-r_force = [0,0.05, 0]
+r_force = [0,0.075, 0]
 loadcase1 = np.vstack((Force1, Moment1, r_force)) 
 
 
 Force2 = np.array([589.6, 442.2 + 88, 589.6])  # Force vector in 3D [Fx, Fy, Fz]
 Moment2 = np.array([15.25, 0, 0])  # Moment vector in 3D [Mx, My, Mz] 88
-r_force = [0,0.05, 0]
+r_force = [0,0.075, 0]
 loadcase2 = np.vstack((Force2, Moment2,r_force))
 
 loadcases = np.array([loadcase1, loadcase2])
@@ -81,7 +81,7 @@ diameterscondensed = np.vstack((Diameters, Diameters_minor, d_head)).T
 diameterscondensed = diameterscondensed[::16]
 print("diameterslength",len(diameterscondensed))
 
-widths = np.linspace(0.0128, 0.05, 9)
+widths = np.linspace(0.02, 0.02, 1)
 lengths = np.linspace(0.0128, 0.05, 9)
 
 
@@ -99,9 +99,9 @@ for w in widths:
 			for loadcase in [loadcases[0]]:
 				for t2 in t2s:
 					for t3 in t3s:
-						for material_bolt in [material_properties[1]]:
-							for material_lug in [material_properties[0]]:
-								for material_wall in [material_properties[0]]:
+						for material_bolt in [material_properties[0]]:
+							for material_lug in [material_properties[1]]:
+								for material_wall in [material_properties[1]]:
 
 									name_material_lug = material_lug[0]
 									E_lug = material_lug[1]
@@ -134,12 +134,12 @@ for w in widths:
 
 
 									positioncases =[]
-									for i in range(2):
-										for j in range(2):
+									for i in range(1):
+										for j in range(1):
 											tempgrid = calculations_bolts.getGrid(i+2,j+2, w, d_nom, l, "metal")
 											if tempgrid is not None:
 												positioncases.append(tempgrid)
-
+									
 									for positions in positioncases:
 										counter += 1
 										diameters = np.full(positions.shape[0], d_nom)
@@ -173,14 +173,33 @@ for w in widths:
 										if total_safety > 1:
 											weight = GetWeight(diameters, density_lug, density_wall, density_bolt, w, l, t2)
 											if weight < minweight:
-												print("counter",counter)
+
 												minweight = weight
+												
 												print("weight", weight)
 												print("safety", total_safety)
-												print("forces",forces)
-												print("thermalforce",thermal_force)
-												print(positions.shape)
+												print("t2", t2)
+												print("t3", t3)
+												print("w", w)
+												print("l", l)
+												print("diameter nom", d_nom)
+												print("diameter minor", diameters_minor)
+												print("diameter head", d_head)
+												print("position matrix:")
 												print(positions)
-												print(diameters[0], w, l)
-												print("name_material_lug, name_material_wall, name_material_bolt, loadcase, t2, t3, diametercondensed, w, l")
-												print(name_material_lug, name_material_wall, name_material_bolt, loadcase, t2, t3, diametercondensed, w, l)
+												print("material_lug", Material_namessss[int(name_material_lug)])
+												print("material_wall", Material_namessss[int(name_material_wall)])
+												print("name_material_bolt", Material_namessss[int(name_material_bolt)])
+												print("----------------------------------------------")						
+
+
+												# print("counter",counter)
+												# print("weight", weight)
+												# print("safety", total_safety)
+												# print("forces",forces)
+												# print("thermalforce",thermal_force)
+												# print(positions.shape)
+												# print(positions)
+												# print(diameters[0], w, l)
+												# print("name_material_lug, name_material_wall, name_material_bolt, loadcase, t2, t3, diametercondensed, w, l")
+												# print(name_material_lug, name_material_wall, name_material_bolt, loadcase, t2, t3, diametercondensed, w, l)

@@ -10,21 +10,18 @@ Material_namessss = [
 	"Stainless Steel 316", 
 	"Inconel 718", 
 	"Maraging Steel 18Ni(250)"
+	"Aluminium alloy AA 2024-T3" #material of the wall for whatever reason
 ]
 
-Material_names = np.array([1,2,3,4,5,6])
+Material_names = np.array([1,2,3,4,5,6,7])
 
-normal_yield = np.array([240E6, 503E6, 324E6, 290E6, 1030E6, 1725E6])#Pa
+normal_yield = np.array([240E6, 503E6, 324E6, 290E6, 1030E6, 1725E6,370])#Pa
 shear_yield = normal_yield/np.sqrt(3)  # Shear yield strengths in MPa
-E_moduli = np.array([69, 71.7, 73.1, 193, 205, 210])*10**6  # Young's Moduli in GPa
-thermal_expansion = np.array([23.6, 23.5, 22.2, 16.0, 13.0, 10.8])*10**-6  # Thermal expansion coefficients in 1/K
-densities = np.array([2700, 2810, 2780, 8000, 8190, 8000])  # Density in kg/m^3
+E_moduli = np.array([69, 71.7, 73.1, 193, 205, 210,73])*10**9  # Young's Moduli in GPa
+thermal_expansion = np.array([23.6, 23.5, 22.2, 16.0, 13.0, 10.8, 23])*10**-6  # Thermal expansion coefficients in 1/K
+densities = np.array([2700, 2810, 2780, 8000, 8190, 8000,2780])  # Density in kg/m^3
 
 material_properties = np.vstack((Material_names, E_moduli, normal_yield, shear_yield,thermal_expansion,densities)).T
-
-t2s = np.linspace(0.0001, 0.01, 20)
-t3s = np.linspace(0.005, 0.005, 1)
-
 
 Force1 = np.array([442.2, 1400.25 + 280, 442.2])  # Force vector in 3D [Fx, Fy, Fz]
 Moment1 = np.array([15.25, 0, 0])  # Moment vector in 3D [Mx, My, Mz] 280
@@ -81,6 +78,9 @@ diameterscondensed = np.vstack((Diameters, Diameters_minor, d_head)).T
 diameterscondensed = diameterscondensed[::16]
 print("diameterslength",len(diameterscondensed))
 
+t2s = np.linspace(0.0001, 0.01, 20)
+t3s = np.linspace(0.005, 0.005, 1)
+
 widths = np.linspace(0.02, 0.02, 1)
 lengths = np.linspace(0.0128, 0.05, 9)
 
@@ -96,7 +96,7 @@ for w in widths:
 	print("sth happened")
 	for l in lengths:
 		for diametercondensed in diameterscondensed[:]:
-			for loadcase in [loadcases[0]]:
+			for loadcase in [loadcases[1]]:
 				for t2 in t2s:
 					for t3 in t3s:
 						for material_bolt in [material_properties[0]]:

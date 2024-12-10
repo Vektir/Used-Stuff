@@ -7,11 +7,11 @@ t2s = np.linspace(0.002, 0.01, 20) # at least 2 mm (immediately chosen)
 t3s = np.linspace(0.005, 0.005, 1) # constant 5mm
 
 widths = np.linspace(0.05, 0.05, 1) # constant 5 cm
-lengths = np.linspace(0.05, 0.10, 9) # at least 5cm (immediately chosen)
+lengths = np.linspace(0.18, 0.50, 9) # at least 5cm (immediately chosen)
 
 lug_material = 2 ## 2 or 8
 wall_material = 7
-bolt_material = 1
+bolt_material = 4
 
 Material_namessss = [
 	"1 - AL6061-T6", 
@@ -26,7 +26,7 @@ Material_namessss = [
 
 Material_names = np.array([1,2,3,4,5,6,7,8])
 
-normal_yield = np.array([240E6, 503E6, 324E6, 290E6, 1030E6, 1725E6,370E6,435E6])#Pa
+normal_yield = np.array([240E6, 503E6, 324E6, 290E6, 1030E6, 1725E6,370E6,1034E6])#Pa
 shear_yield = normal_yield/np.sqrt(3)  # Shear yield strengths in MPa
 E_moduli = np.array([69, 71.7, 73.1, 193, 205, 210,73,205])*10**9  # Young's Moduli in GPa
 thermal_expansion = np.array([23.6, 23.5, 22.2, 16.0, 13.0, 10.8, 23,11.2])*10**-6  # Thermal expansion coefficients in 1/K

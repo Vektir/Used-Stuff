@@ -3,13 +3,13 @@ import calculations_bolts
 import thermal
 from itertools import product
 
-t2s = np.linspace(0.002, 0.01, 20) # at least 2 mm (immediately chosen)
+t2s = np.linspace(0.01, 0.01, 20) # at least 2 mm (immediately chosen)
 t3s = np.linspace(0.005, 0.005, 1) # constant 5mm
 
 widths = np.linspace(0.05, 0.05, 1) # constant 5 cm
 lengths = np.linspace(0.18, 0.50, 9) # at least 5cm (immediately chosen)
 
-lug_material = 2 ## 2 or 8
+lug_material = 8 ## 2 or 8
 wall_material = 7
 bolt_material = 4
 
@@ -157,6 +157,10 @@ for w in widths:
 
 										thermal_force = thermal.thermalforces2materials(fr, E_bolt, d_nom, alpha_lug, t2, alpha_wall, t3, alpha_bolt)
 
+										no_thermal_out_of_plane_shear_stresses = calculations_bolts.get_shear_stress(forces, diameters, t2, t3)
+										no_thermal_max_shear_stress_lug = np.max(no_thermal_out_of_plane_shear_stresses[0])
+										no_thermal_max_shear_stress_wall = np.max(no_thermal_out_of_plane_shear_stresses[1])
+
 										forces += np.array([0,thermal_force,0])
 
 										inplane_normal_stresses = calculations_bolts.get_inplane_bearing_stress(forces, diameters, t2, t3)
@@ -184,7 +188,15 @@ for w in widths:
 												minweight = weight
 												
 												print("weight", weight)
-												print("safety", total_safety)
+												print("MS total", total_safety-1)
+												print("lug in plane MS", normal_yield_lug/max_normal_stress_lug - 1)
+												print("lug out of plane MS with thermal" , shear_yield_lug/max_shear_stress_lug - 1)
+												print("lug out of plane MS no thermal" , shear_yield_lug/no_thermal_max_shear_stress_lug -1 )
+						
+												print("wall in plane MS", normal_yield_wall/max_normal_stress_wall -1)
+												print("wall out of plane MS with thermal", shear_yield_wall/max_shear_stress_wall -1)
+												print("wall out of plane MS no thermal", shear_yield_wall/no_thermal_max_shear_stress_wall-1)
+
 												print("t2", t2)
 												print("t3", t3)
 												print("w", w)
